@@ -10518,7 +10518,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				show_dialog(playerid, d_gps_car, DIALOG_STYLE_LIST, ""c_server"Pencarian transportasi", dialog_str, "Pilih", "Menutup");
 				return SendClientMessage(playerid, col_gray,"Kendaraan ini tidak memiliki pelacak GPS.");
 			}
-			SendClientMessage(playerid, col_white, !""scm_info"[GPS] - Ìåòêà óñòàíîâëåíà.");
+			SendClientMessage(playerid, col_white, !""scm_info"[GPS] - Navigator terpasang.");
 			is_gps_used { playerid } = 1;
 			SetPlayerRaceCheckpoint(playerid, 1, veh_info[carid - 1][v_now_pos][0], veh_info[carid - 1][v_now_pos][1], veh_info[carid - 1][v_now_pos][2], 0.0, 0.0, 0.0, 2.0);
 		}
@@ -14082,8 +14082,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				case 0:
 				{
+				    foreach(new i: Player)
+				    {
+						if(p_info [ i ] [ member ] == 4)
+						{
+							SendClientMessage(playerid,col_white,""scm_error"Need 3 cops online");
+							return 1;
+						}
+					}
 					if ( Iter_Count(player_vehicles[playerid]) == 0)return SendClientMessage ( playerid, col_gray, ""c_orange_red"* "c_grey"You do not have a vehicle that can be registered." ),
-																		   show_dialog ( playerid, d_lspd_payments, DIALOG_STYLE_LIST, ""c_server"Ïëàòíûå óñëóãè", "Ðåãèñòðàöèÿ òðàíñïîðòà["c_green"250$"c_white"]\nBond deposit\nCollateral information", "Choose", "Close" ) ;
+																		   show_dialog ( playerid, d_lspd_payments, DIALOG_STYLE_LIST, ""c_server"Paid Services", "Vehicle Registration�["c_green"250$"c_white"]\nBond deposit\nCollateral information", "Choose", "Close" ) ;
 					if ( p_info [ playerid ] [ money ] < 150 )return SendClientMessage ( playerid, col_gray, ""c_orange_red"* "c_grey"To register a transport, you must "c_orange_red"250$" ),
 																	 show_dialog ( playerid, d_lspd_payments, DIALOG_STYLE_LIST, ""c_server"Paid services", "Vehicle registration["c_green"250$"c_white"]\nBond deposit\nCollateral information", "Choose", "Close" ) ;
 
@@ -14100,7 +14108,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						strcat ( dialog_string, vehicle_name [ veh_info [ veh_id - 1 ] [ v_model ] - 400 ] ) ;
 						strcat ( dialog_string, "\n" ) ;
 					}
-					show_dialog ( playerid, d_reg_vehicle, DIALOG_STYLE_LIST, ""c_server"Ðåãèñòðàöèÿ òðàíñïîðòà", dialog_string, "Âûáðàòü", "Íàçàä" ) ;
+					show_dialog ( playerid, d_reg_vehicle, DIALOG_STYLE_LIST, ""c_server"Owned Vehicles�", dialog_string, "OK", "Exit" ) ;
 
 					if ( veh_slot == 0 )return SendClientMessage ( playerid, col_gray, ""c_orange_red"* "c_grey"All your transport is already registered." ),
 														show_dialog ( playerid, d_lspd_payments, DIALOG_STYLE_LIST, ""c_server"Paid services", "Vehicle registration["c_green"250$"c_white"]\nBond deposit\nCollateral information", "Choose", "Close" ) ;
@@ -17654,7 +17662,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if ( ! response ) return 1 ;
 			new bet_amount = strval ( inputtext ) ;
-			if ( bet_amount < 1000 || bet_amount > 15000 ) return show_dialog ( playerid, d_sm_bet, DIALOG_STYLE_INPUT, ""c_server"Ukuran taruhan", ""c_white"Masukkan ukuran taruhan Anda:\n\n"c_orange_red"* Taruhannya harus antara $ 1.000 dan $ 15.000", "Menerima", "Pembatalan" ) ;
+			if ( bet_amount < 1 || bet_amount > 9000000000 ) return show_dialog ( playerid, d_sm_bet, DIALOG_STYLE_INPUT, ""c_server"Ukuran taruhan", ""c_white"Masukkan ukuran taruhan Anda:\n\n"c_orange_red"* Taruhannya harus antara ID$1 dan ID$9.000.000.000", "Menerima", "Pembatalan" ) ;
 			if ( p_info [ playerid ] [ money ] < bet_amount ) return show_dialog ( playerid, d_sm_bet, DIALOG_STYLE_INPUT, ""c_server"Ukuran taruhan", ""c_white"Masukkan ukuran taruhan Anda:\n\n"c_orange_red"* Anda tidak memiliki cukup dana", "Menerima", "Pembatalan" ) ;
 			SetPVarInt ( playerid, "sm_bet", bet_amount ) ;
 			new td_string [ 64 ] ;
@@ -21519,19 +21527,28 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 case 0:
                 {
 					kapal = CreateVehicle(493,949.9177,-2104.5808,-0.5625,142.8733,4,2,5000,0);
-					give_money ( playerid, - 30000 ) ;
+					if(p_info [ playerid ] [ level ] > 1)
+					{
+						give_money ( playerid, - 30000 ) ;
+					}
 				 	SendClientMessage(playerid,col_white,""scm_sucess"Kamu berhasil menyewa Jetmax dengan biaya ID$ 30.000 gunakan /unrent untuk berhenti menyewa");
 				}
 				case 1:
 				{
 				    kapal = CreateVehicle(453,949.9177,-2104.5808,-0.5625,142.8733,4,2,5000,0);
-				    give_money ( playerid, - 25000 ) ;
+				    if(p_info [ playerid ] [ level ] > 1)
+					{
+						give_money ( playerid, - 25000 ) ;
+					}
 				    SendClientMessage(playerid,col_white,""scm_sucess"Kamu berhasil menyewa Reefer dengan biaya ID$ 25.000 gunakan /unrent untuk berhenti menyewa");
 				}
 				case 2:
 				{
 				    kapal = CreateVehicle(452,949.9177,-2104.5808,-0.5625,142.8733,4,2,5000,0);
-				    give_money ( playerid, - 10000 ) ;
+				    if(p_info [ playerid ] [ level ] > 1)
+					{
+						give_money ( playerid, - 10000 ) ;
+					}
 				    SendClientMessage(playerid,col_white,""scm_sucess"Kamu berhasil menyewa Speeder dengan biaya ID$ 10.000 gunakan /unrent untuk berhenti menyewa");
 				}
             }

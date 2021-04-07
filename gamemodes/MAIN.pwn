@@ -1925,9 +1925,9 @@ new registration_skins [ 3 ] [ 2 ] [ 5 ] = {
 new Float:newbie_spawn_pos[3][3][4] =
 {
 	{
-		{995.9619, -1367.8427, 14.5000, 0.000 },
-		{1006.5240, -1355.1487, 14.5000, 180.000 },
-		{1034.7451, -1363.0724, 14.5000, 90.000 }
+		{983.5798,-1299.5798,13.3828,184.7272 },
+		{1000.2791,-1301.2800,13.3828,170.8551 },
+		{998.6150,-1313.6989,13.5468,163.8126 }
 	},
 	{
 		{1756.5187,-1902.9701, 14.5000, 270.000},
@@ -4031,7 +4031,7 @@ new Float:gBusCPs[BUS_ROUTE_COUNT][ 162 ] [ 4 ] =
 	}
 };
 
-new gBusSalary[BUS_ROUTE_COUNT] = { 1400, 1600, 1900, 1700, 1600 } ;
+new gBusSalary[BUS_ROUTE_COUNT] = { 14000, 16000, 19000, 17000, 16000 } ;
 
 /*
 		Mechanic
@@ -7590,6 +7590,11 @@ stock kick_player ( playerid )
 {
 	new ms = GetPlayerPing ( playerid ) > 200 ? 200 : GetPlayerPing ( playerid ) + 50 ;
 	return SetTimerEx ( "fixed_kick", ms, 0, "i", playerid ) ;
+}
+callback: Cuaca()
+{
+    new randcuaca = RandomEx ( 0, 20 ) ;
+    SetWeather(randcuaca);
 }
 callback: fixed_kick ( playerid )
 {
@@ -11612,7 +11617,7 @@ StrToHex ( string [ ] )
 stock cop_player ( playerid )
 {
 	if ( p_info [ playerid ] [ member ] >= 4 && p_info [ playerid ] [ member ] <= 6 ) return 1 ;
-	if ( p_info [ playerid ] [ member ] == 11 && p_info [ playerid ] [ rank ] == 7 ) return 1 ;
+	if ( p_info [ playerid ] [ member ] == 11 ) return 1 ;
 	return 0 ;
 }
 
@@ -28037,14 +28042,14 @@ cmd:bheal ( playerid )
 	if ( _b_id == -1 ) return SendClientMessage ( playerid, col_gray,""c_orange_red"* "c_grey"Perlu dalam bisnis." ) ;
 	if ( ! b_info [ _b_id ] [ b_improve ] [ 1 ] )return SendClientMessage ( playerid, col_gray,""c_orange_red"* "c_grey"Tidak ada layanan medis dalam bisnis ini." ) ;
 
-	if ( p_info [ playerid ] [ money ] < 250 ) return SendClientMessage ( playerid, col_gray,""c_orange_red"* "c_grey"Anda tidak memiliki cukup dana untuk menggunakan perawatan kesehatan." ) ;
+	if ( p_info [ playerid ] [ money ] < 2500 ) return SendClientMessage ( playerid, col_gray,""c_orange_red"* "c_grey"Anda tidak memiliki cukup dana untuk menggunakan perawatan kesehatan." ) ;
 
 
-	give_money ( playerid, -250 ) ;
-	insert_money_log ( playerid, INVALID_PLAYER_ID, -250, "kotak P3K bisnis" ) ;
+	give_money ( playerid, -2500 ) ;
+	insert_money_log ( playerid, INVALID_PLAYER_ID, -2500, "kotak P3K bisnis" ) ;
 
-	b_info [ _b_id ] [ b_money ] += 250 ;
-	b_info [ _b_id ] [ b_cash_today ] += 250 ;
+	b_info [ _b_id ] [ b_money ] += 2500 ;
+	b_info [ _b_id ] [ b_cash_today ] += 2500 ;
 
 
 	new Float:pl_health ;
@@ -32238,13 +32243,13 @@ stock is_ip_white_list ( server_ip [ ] )
 #include "EMS.pwn"
 #include "NARKOBA.pwn"
 #include "DIALOG.pwn"
-#include "VOICE.pwn"
+//#include "VOICE.pwn"
 
 public OnGameModeInit()
 {
-    gstream = SvCreateGStream(0xffff0000, "Global");
+    //gstream = SvCreateGStream(0xffff0000, "Global");
 
-	global_weather = 1 ;
+    SetTimer("Cuaca", 900000, true);
 
     SetGravity(0.010);
 
@@ -32989,7 +32994,7 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
-    if (gstream) SvDeleteStream(gstream);
+    //if (gstream) SvDeleteStream(gstream);
 
     new query_string[256];
 
@@ -33070,7 +33075,7 @@ public OnPlayerConnect ( playerid )
 	
 	#include "modules/objects/m_rem_objects.pwn"
 
-    CekVoicePlugin(playerid);
+    //CekVoicePlugin(playerid);
 
     /*
         Dalam loop, tetapkan nilai -1 ke setiap sel dari array, yang bertanggung jawab
@@ -33132,7 +33137,7 @@ public OnPlayerDisconnect ( playerid, reason )
 		printf ( "[DEBUG] [OnPlayerDisconnect] playerid:%d | reason:%d", playerid, reason ) ;
 	#endif
 
-    RemoveLocalVoice(playerid);
+    //RemoveLocalVoice(playerid);
 
 	if(p_info[playerid][spawnchange] == 6)
 	{
@@ -38506,8 +38511,8 @@ public OnPlayerKeyStateChange ( playerid, newkeys, oldkeys )
 										DestroyDynamicObject ( GetPVarInt ( playerid, "fork_object" ) ) ;
 										DeletePVar ( playerid, "fork_object" ) ;
 									}
-									p_info [ playerid ] [ salary ] += 150 * server_bonus ;
-									update_payment ( playerid, 150 * server_bonus ) ;
+									p_info [ playerid ] [ salary ] += 1500 * server_bonus ;
+									update_payment ( playerid, 1500 * server_bonus ) ;
 
 
 									if ( quest_status [ playerid ] [ 6 ] == 1 )
@@ -38561,8 +38566,8 @@ public OnPlayerKeyStateChange ( playerid, newkeys, oldkeys )
 													DestroyDynamicObject ( GetPVarInt ( playerid, "fork_object" ) ) ;
 													DeletePVar ( playerid, "fork_object" ) ;
 												}
-												p_info [ playerid ] [ salary ] += 150 * server_bonus ;
-												update_payment ( playerid, 150 * server_bonus ) ;
+												p_info [ playerid ] [ salary ] += 1500 * server_bonus ;
+												update_payment ( playerid, 1500 * server_bonus ) ;
 
 											}
 										}
@@ -38585,8 +38590,8 @@ public OnPlayerKeyStateChange ( playerid, newkeys, oldkeys )
 												DestroyDynamicObject ( GetPVarInt ( playerid, "fork_object" ) ) ;
 												DeletePVar ( playerid, "fork_object" ) ;
 											}
-											p_info [ playerid ] [ salary ] += 150 * server_bonus ;
-											update_payment ( playerid, 150 * server_bonus ) ;
+											p_info [ playerid ] [ salary ] += 1500 * server_bonus ;
+											update_payment ( playerid, 1500 * server_bonus ) ;
 										}
 										return 1 ;
 									}
@@ -40358,28 +40363,28 @@ public OnPlayerEnterCheckpoint ( playerid )
 					{
 						case 0..50:
 						{
-							p_info [ playerid ] [ salary ] += 90 * server_bonus ;
-							update_payment ( playerid, 90 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 900 * server_bonus ;
+							update_payment ( playerid, 900 * server_bonus ) ;
 						}
 						case 51..100:
 						{
-							p_info [ playerid ] [ salary ] += 100 * server_bonus ;
-							update_payment ( playerid, 100 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1000 * server_bonus ;
+							update_payment ( playerid, 1000 * server_bonus ) ;
 						}
 						case 101..150:
 						{
-							p_info [ playerid ] [ salary ] += 110 * server_bonus ;
-							update_payment ( playerid, 110 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1100 * server_bonus ;
+							update_payment ( playerid, 1100 * server_bonus ) ;
 						}
 						case 151..200:
 						{
-							p_info [ playerid ] [ salary ] += 120 * server_bonus ;
-							update_payment ( playerid, 120 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1200 * server_bonus ;
+							update_payment ( playerid, 1200 * server_bonus ) ;
 						}
 						default:
 						{
-							p_info [ playerid ] [ salary ] += 130 * server_bonus ;
-							update_payment ( playerid, 130 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1300 * server_bonus ;
+							update_payment ( playerid, 1300 * server_bonus ) ;
 						}
 					}
 
@@ -40421,8 +40426,8 @@ public OnPlayerEnterCheckpoint ( playerid )
 				{
 					case 0..50:
 					{
-						p_info [ playerid ] [ salary ] += 120 * server_bonus ;
-						update_payment ( playerid, 120 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1200 * server_bonus ;
+						update_payment ( playerid, 1200 * server_bonus ) ;
 						if ( quest_status [ playerid ] [ 0 ] == 1 )
 						{
 							quest_progress [ playerid ] [ 0 ] += 120 * server_bonus ;
@@ -40436,8 +40441,8 @@ public OnPlayerEnterCheckpoint ( playerid )
 					}
 					case 51..100:
 					{
-						p_info [ playerid ] [ salary ] += 130 * server_bonus ;
-						update_payment ( playerid, 130 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1300 * server_bonus ;
+						update_payment ( playerid, 1300 * server_bonus ) ;
 						if ( quest_status [ playerid ] [ 0 ] == 1 )
 						{
 							quest_progress [ playerid ] [ 0 ] += 130 * server_bonus ;
@@ -40451,8 +40456,8 @@ public OnPlayerEnterCheckpoint ( playerid )
 					}
 					case 101..150:
 					{
-						p_info [ playerid ] [ salary ] += 140 * server_bonus ;
-						update_payment ( playerid, 140 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1400 * server_bonus ;
+						update_payment ( playerid, 1400 * server_bonus ) ;
 						if ( quest_status [ playerid ] [ 0 ] == 1 )
 						{
 							quest_progress [ playerid ] [ 0 ] += 140 * server_bonus ;
@@ -40466,8 +40471,8 @@ public OnPlayerEnterCheckpoint ( playerid )
 					}
 					case 151..200:
 					{
-						p_info [ playerid ] [ salary ] += 150 * server_bonus ;
-						update_payment ( playerid, 150 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1500 * server_bonus ;
+						update_payment ( playerid, 1500 * server_bonus ) ;
 						if ( quest_status [ playerid ] [ 0 ] == 1 )
 						{
 							quest_progress [ playerid ] [ 0 ] += 150 * server_bonus ;
@@ -40481,8 +40486,8 @@ public OnPlayerEnterCheckpoint ( playerid )
 					}
 					default:
 					{
-						p_info [ playerid ] [ salary ] += 160 * server_bonus ;
-						update_payment ( playerid, 160 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1600 * server_bonus ;
+						update_payment ( playerid, 1600 * server_bonus ) ;
 
 						if ( quest_status [ playerid ] [ 0 ] == 1 )
 						{
@@ -40529,28 +40534,28 @@ public OnPlayerEnterCheckpoint ( playerid )
 				{
 					case 0..50:
 					{
-						p_info [ playerid ] [ salary ] += 80 * server_bonus ;
-						update_payment ( playerid, 80 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 800 * server_bonus ;
+						update_payment ( playerid, 800 * server_bonus ) ;
 					}
 					case 51..100:
 					{
-						p_info [ playerid ] [ salary ] += 85 * server_bonus ;
-						update_payment ( playerid, 85 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 850 * server_bonus ;
+						update_payment ( playerid, 850 * server_bonus ) ;
 					}
 					case 101..150:
 					{
-						p_info [ playerid ] [ salary ] += 90 * server_bonus ;
-						update_payment ( playerid, 90 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 900 * server_bonus ;
+						update_payment ( playerid, 900 * server_bonus ) ;
 					}
 					case 151..200:
 					{
-						p_info [ playerid ] [ salary ] += 100 * server_bonus ;
-						update_payment ( playerid, 100 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1000 * server_bonus ;
+						update_payment ( playerid, 1000 * server_bonus ) ;
 					}
 					default:
 					{
-						p_info [ playerid ] [ salary ] += 110 * server_bonus ;
-						update_payment ( playerid, 110 * server_bonus ) ;
+						p_info [ playerid ] [ salary ] += 1100 * server_bonus ;
+						update_payment ( playerid, 1100 * server_bonus ) ;
 					}
 				}
 
@@ -40618,28 +40623,28 @@ public OnPlayerEnterCheckpoint ( playerid )
 					{
 						case 0..50:
 						{
-							p_info [ playerid ] [ salary ] += 90 * server_bonus ;
-							update_payment ( playerid, 90 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 900 * server_bonus ;
+							update_payment ( playerid, 900 * server_bonus ) ;
 						}
 						case 51..100:
 						{
-							p_info [ playerid ] [ salary ] += 95 * server_bonus ;
-							update_payment ( playerid, 95 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 950 * server_bonus ;
+							update_payment ( playerid, 950 * server_bonus ) ;
 						}
 						case 101..150:
 						{
-							p_info [ playerid ] [ salary ] += 100 * server_bonus ;
-							update_payment ( playerid, 100 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1000 * server_bonus ;
+							update_payment ( playerid, 1000 * server_bonus ) ;
 						}
 						case 151..200:
 						{
-							p_info [ playerid ] [ salary ] += 110 * server_bonus ;
-							update_payment ( playerid, 110 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1100 * server_bonus ;
+							update_payment ( playerid, 1100 * server_bonus ) ;
 						}
 						default:
 						{
-							p_info [ playerid ] [ salary ] += 115 * server_bonus ;
-							update_payment ( playerid, 115 * server_bonus ) ;
+							p_info [ playerid ] [ salary ] += 1150 * server_bonus ;
+							update_payment ( playerid, 1150 * server_bonus ) ;
 						}
 					}
 
@@ -41957,7 +41962,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 
 						set_pos ( playerid, b_interior [ bis_int ] [ i_position ] [ 0 ] , b_interior [ bis_int ] [ i_position ] [ 1 ], b_interior [ bis_int ] [ i_position ] [ 2 ], b_interior [ bis_int ] [ i_position ] [ 3 ], b_interior [ bis_int ] [ i_interior ], b_info [ t ] [ b_id ] + 1000 ) ;
 						SetPVarInt ( playerid, "tp_area_used", 1 ) ;
-						if ( b_info [ t ] [ b_improve ] [ 2 ] ) SendClientMessage ( playerid, col_gray, "* Bisnis ini memiliki kotak P3K. Untuk memulihkan penggunaan kesehatan "c_green"/bheal"c_grey" ("c_green"250$"c_grey")");
+						if ( b_info [ t ] [ b_improve ] [ 2 ] ) SendClientMessage ( playerid, col_gray, "* Bisnis ini memiliki kotak P3K. Untuk memulihkan penggunaan kesehatan "c_green"/bheal"c_grey" ("c_green"ID$2500"c_grey")");
 
 						teleport_tick [ playerid ] = GetTickCount ( ) ;
 
